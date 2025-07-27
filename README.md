@@ -57,29 +57,7 @@ For the Lead Scoring workflow, send POST requests with leads JSON payload to the
 For the Lead Source Simulator, activate the scheduled trigger node to simulate lead submissions automatically.
 
 JSON Lead Payload Format:
-The workflows expect leads in this JSON structure:
-
-{
-  "submissionBatchId": "BATCH-20250727-003",
-  "receivedAt": "2025-07-27T13:54:21Z",
-  "leads": [
-    {
-      "firstName": "Liam",
-      "lastName": "Parker",
-      "email": "liam.parker@techwave.com",
-      "phone": "+1-555-111-2222",
-      "company": "TechWave Solutions",
-      "jobTitle": "Head of Engineering",
-      "leadSource": "Website Form",
-      "industry": "Cloud Computing",
-      "employees": 750,
-      "budget": 250000,
-      "notes": "Interested in scalable infrastructure solutions.",
-      "productsOfInterest": ["Cloud Platform X", "Data Analytics Suite"],
-      "customField": "Initial Inquiry"
-    }
-  ]
-}
+The workflows expect leads can be found in Postman collection in JSON format.
 
 Lead Scoring Logic:
 Employees > 500 → +30 points

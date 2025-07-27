@@ -1,0 +1,413 @@
+{
+  "name": "REM Waste-Lead Source",
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "const incomingPayload = $input.first().json;  // <- note the `.body`\n\nif (!incomingPayload || !Array.isArray(incomingPayload.leads)) {\n  throw new Error(\"No leads array found in the incoming payload.\");\n}\n\nconst leads = incomingPayload.leads;\nconst newItems = [];\n\nfor (const lead of leads) {\n   if (lead.phone) {\n    lead.phone = String(lead.phone).replace(/[^\\d\\+]/g, ''); \n   }\n  let score = 0;\n\n  const companyEmployees = lead.employees;\n  if (!isNaN(companyEmployees)) {\n    if (companyEmployees > 500) score += 30;\n    else if (companyEmployees > 100) score += 15;\n  }\n\n  const budget = lead.budget;\n  if (!isNaN(budget)) {\n    if (budget > 150000) score += 25;\n    else if (budget > 50000) score += 10;\n  }\n\n  if (lead.email) {\n    const email = lead.email.toLowerCase();\n    const personalDomains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com', 'aol.com'];\n    if (!personalDomains.some(domain => email.includes(domain)) && email.includes('@')) {\n      score += 15;\n    }\n  }\n\n  newItems.push({ json: { ...lead, calculatedScore: score } });\n}\n\nreturn newItems;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        208,
+        -176
+      ],
+      "id": "da7ac7ae-acaf-45ea-b75d-5dabcd76e7ba",
+      "name": "Code",
+      "executeOnce": false,
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1Lc0KHJfVDLn-MV_hGK65P4MPQrSdebc63YpginnZVr4",
+          "mode": "list",
+          "cachedResultName": "Leads",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Lc0KHJfVDLn-MV_hGK65P4MPQrSdebc63YpginnZVr4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Info",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Lc0KHJfVDLn-MV_hGK65P4MPQrSdebc63YpginnZVr4/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "firstName",
+              "displayName": "firstName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "lastName",
+              "displayName": "lastName",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "jobTitle",
+              "displayName": "jobTitle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "leadSource",
+              "displayName": "leadSource",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "employees",
+              "displayName": "employees",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "budget",
+              "displayName": "budget",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "notes",
+              "displayName": "notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "productsOfInterest",
+              "displayName": "productsOfInterest",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "customField",
+              "displayName": "customField",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "calculatedScore",
+              "displayName": "calculatedScore",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        432,
+        -176
+      ],
+      "id": "dfe6aded-e624-4263-ada4-bd41f2a40a37",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "0rwk22tQHQwmpbzY",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "73f86e0c-1469-4630-b2b6-70b632605e04",
+              "leftValue": "={{ $json.calculatedScore }}",
+              "rightValue": 60,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        656,
+        -176
+      ],
+      "id": "22ee8058-57c0-4e6f-9091-ad998cc9831a",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C0977BJT35M",
+          "mode": "list",
+          "cachedResultName": "low-score-leads"
+        },
+        "messageType": "block",
+        "blocksUi": "={\n  \"blocks\": [\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*⚠️ Low-Value Lead: {{$json.firstName}} {{$json.lastName}}*\\n*🏢 Company:* {{$json.company}}\\n*📧 Email:* {{$json.email}}\\n*💰 Budget:* {{$json.budget}}\\n*⭐ Score:* {{$json.calculatedScore}}\"\n      }\n    }\n  ]\n}\n",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        880,
+        -80
+      ],
+      "id": "f2abe7a9-8483-4f19-b4c7-8400bf3d6ff4",
+      "name": "Low Priority Leads",
+      "webhookId": "dfae35e9-3dca-4bd9-9a79-e568295e54a1",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "ESkoCy5WezWpMtSJ",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C097KT23JB0",
+          "mode": "list",
+          "cachedResultName": "hot-leads"
+        },
+        "messageType": "block",
+        "blocksUi": "={\n  \"blocks\": [\n    {\n      \"type\": \"section\",\n      \"text\": {\n        \"type\": \"mrkdwn\",\n        \"text\": \"*🚀 New High-Value Lead: {{$json.firstName}} {{$json.lastName}}*\\n*🏢 Company:* {{$json.company}}\\n*📧 Email:* {{$json.email}}\\n*💰 Budget:* {{$json.budget}}\\n*⭐ Score:* {{$json.calculatedScore}}\"\n      }\n    }\n  ]\n}\n\n",
+        "text": "=",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        880,
+        -272
+      ],
+      "id": "9215941d-b402-4a08-b339-27e9021c05df",
+      "name": "Hot Leads",
+      "webhookId": "25cdfdf6-49cc-4520-a765-0ceeeee309e4",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "ESkoCy5WezWpMtSJ",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 1
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -240,
+        -176
+      ],
+      "id": "48d52e7f-bd1e-4d40-9101-ee97f3c63acf",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"submissionBatchId\": \"BATCH-20250727-003\",\n  \"receivedAt\": \"2025-07-27T13:54:21Z\",\n  \"leads\": [\n    {\n      \"firstName\": \"Liam\",\n      \"lastName\": \"Parker\",\n      \"email\": \"liam.parker@techwave.com\",\n      \"phone\": \"+1-555-111-2222\",\n      \"company\": \"TechWave Solutions\",\n      \"jobTitle\": \"Head of Engineering\",\n      \"leadSource\": \"Website Form\",\n      \"industry\": \"Cloud Computing\",\n      \"employees\": 750,\n      \"budget\": 250000,\n      \"notes\": \"Interested in scalable infrastructure solutions.\",\n      \"productsOfInterest\": [\"Cloud Platform X\", \"Data Analytics Suite\"],\n      \"customField\": \"Initial Inquiry\"\n    },\n    {\n      \"firstName\": \"Olivia\",\n      \"lastName\": \"Green\",\n      \"email\": \"olivia.green@marketingpro.net\",\n      \"phone\": \"+44-20-7777-8888\",\n      \"company\": \"Marketing Pro Agency\",\n      \"jobTitle\": \"CMO\",\n      \"leadSource\": \"Webinar Attendee\",\n      \"industry\": \"Marketing Services\",\n      \"employees\": 80,\n      \"budget\": 45000,\n      \"notes\": \"Looking for advanced marketing automation features.\",\n      \"productsOfInterest\": [\"Marketing Automation Platform\", \"CRM Integration\"],\n      \"customField\": \"Follow-up required after webinar\"\n    },\n    {\n      \"firstName\": \"Noah\",\n      \"lastName\": \"Chen\",\n      \"email\": \"noah.chen@financecorp.org\",\n      \"phone\": \"+86-10-6666-7777\",\n      \"company\": \"FinanceCorp Global\",\n      \"jobTitle\": \"Risk Analyst\",\n      \"leadSource\": \"Referral\",\n      \"industry\": \"Financial Services\",\n      \"employees\": 2000,\n      \"budget\": 300000,\n      \"notes\": \"Seeking robust fraud detection and compliance tools.\",\n      \"productsOfInterest\": [\"Security Suite Y\", \"Compliance Toolkit\"],\n      \"customField\": \"Referred by existing client\"\n    },\n    {\n      \"firstName\": \"Emma\",\n      \"lastName\": \"Davis\",\n      \"email\": \"emma.davis@retailfuture.co\",\n      \"phone\": \"+61-2-9999-0000\",\n      \"company\": \"Retail Future Co.\",\n      \"jobTitle\": \"Operations Manager\",\n      \"leadSource\": \"Trade Show\",\n      \"industry\": \"Retail\",\n      \"employees\": 150,\n      \"budget\": 70000,\n      \"notes\": \"Needs better inventory management and supply chain visibility.\",\n      \"productsOfInterest\": [\"Supply Chain Optimizer\", \"Inventory Management System\"],\n      \"customField\": \"Demo requested at booth\"\n    },\n    {\n      \"firstName\": \"James\",\n      \"lastName\": \"Wang\",\n      \"email\": \"james.wang@educateonline.edu\",\n      \"phone\": \"+1-555-444-5555\",\n      \"company\": \"Educate Online Inc.\",\n      \"jobTitle\": \"VP of eLearning\",\n      \"leadSource\": \"Content Download\",\n      \"industry\": \"Education Technology\",\n      \"employees\": 300,\n      \"budget\": 90000,\n      \"notes\": \"Interested in personalized learning platforms and analytics.\",\n      \"productsOfInterest\": [\"Learning Analytics Module\", \"Content Delivery Platform\"],\n      \"customField\": \"Downloaded 'Future of EdTech' whitepaper\"\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -16,
+        -176
+      ],
+      "id": "dc48995a-d02b-4b22-a3ca-030ef6b2bb5a",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Hot Leads",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Low Priority Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Low Priority Leads": {
+      "main": [
+        []
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "da2ad421-bd39-4fc5-8eb9-1105c86d9df8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d9897d0b8859f639df954ceeeaff3906870397e8cb22636102791b05798848a2"
+  },
+  "id": "9G0QMhT9MU0HBFAB",
+  "tags": []
+}

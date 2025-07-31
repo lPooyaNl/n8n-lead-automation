@@ -1,7 +1,7 @@
-# n8n Automation Projects
+# n8n Automation Project
 
 
-## Projects Included
+## Project Included
 
 ### 1. Lead Scoring Automation (POSTMAN)
 - Receives lead data as JSON via webhook (API call)
